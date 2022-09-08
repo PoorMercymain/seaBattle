@@ -94,6 +94,50 @@ func setInitialField(size int) string {
 	return field
 }
 
+func initMemoryOfPlayerCoordinatesSlice(coordinatesAmount int) *[]string {
+	var playerCoordinatesSlice []string
+
+	for i := 0; i < coordinatesAmount; i++ {
+		playerCoordinatesSlice = append(playerCoordinatesSlice, "")
+	}
+
+	return &playerCoordinatesSlice
+}
+
+func initCoordinatesAmount(shipsAmount int) int {
+	return shipsAmount * 3
+}
+
+func isInt(char string) bool {
+	return char >= "0" && char <= "9"
+}
+
+func checkCoordinateStringLength(coordinateString string) bool {
+	return len(coordinateString) != 2
+}
+
+func isItTimeForExit(inputString string) bool {
+	return inputString == "q"
+}
+
+func isSymbol(char string) bool {
+	return (char >= "A" && char <= "Z") || (char >= "a" && char <= "z")
+}
+
+func areCoordinatesCorrect(coordinatesString string) bool {
+	return checkCoordinateStringLength(coordinatesString) || !isInt(coordinatesString[0:1]) || !isSymbol(coordinatesString[1:2])
+}
+
+func toInt(someString string) (int, error) {
+	return atoi(someString)
+}
+
+func insert(symbol string, someString string, index int) string {
+	firstStringBuffer := someString[0:index]
+	secondStringBuffer := someString[index+1 : len(someString)]
+	return firstStringBuffer + symbol + secondStringBuffer
+}
+
 func main() {
 	difficulty := chooseDifficulty()
 
@@ -117,22 +161,24 @@ func main() {
 
 	fmt.Println(field)
 
-	coordinatesAmount := shipsAmount * 3
+	coordinatesAmount := initCoordinatesAmount(shipsAmount)
 
-	var playerCoordinatesSlice []string
-
-	for i := 0; i < coordinatesAmount; i++ {
-		playerCoordinatesSlice = append(playerCoordinatesSlice, "")
-	}
+	var playerCoordinatesSlice []string = *initMemoryOfPlayerCoordinatesSlice(coordinatesAmount)
 
 	for i := 0; i < coordinatesAmount; i++ {
 		coordinate := userInput()
 
-		if coordinate == "q" {
+		if areCoordinatesCorrect(coordinate) || coordinate == "q" {
+			fmt.Println("Ошибка. Координаты введены в неверном формате.\n" +
+				"Правильный формат: два символа, первый символ - цифра, второй - латинская буква.\n" +
+				"Например: 2A")
 			return
 		} else {
 			playerCoordinatesSlice[i] = coordinate
 		}
+		index, _ := toInt(playerCoordinatesSlice[i])
+		field[index] = string(219)
+
 	}
 
 	fmt.Println("Успешно выбрана сложность, размер карты, число кораблей и координаты:", difficulty, mapSize, shipsAmount, playerCoordinatesSlice)
