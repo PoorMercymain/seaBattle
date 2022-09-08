@@ -117,5 +117,23 @@ func main() {
 
 	fmt.Println(field)
 
-	fmt.Println("Успешно выбрана сложность, размер карты и число кораблей:", difficulty, mapSize, shipsAmount)
+	coordinatesAmount := shipsAmount * 3
+
+	var playerCoordinatesSlice []string
+
+	for i := 0; i < coordinatesAmount; i++ {
+		playerCoordinatesSlice = append(playerCoordinatesSlice, "")
+	}
+
+	for i := 0; i < coordinatesAmount; i++ {
+		coordinate := userInput()
+
+		if coordinate == "q" {
+			return
+		} else {
+			playerCoordinatesSlice[i] = coordinate
+		}
+	}
+
+	fmt.Println("Успешно выбрана сложность, размер карты, число кораблей и координаты:", difficulty, mapSize, shipsAmount, playerCoordinatesSlice)
 }
